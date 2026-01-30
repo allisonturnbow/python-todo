@@ -1,0 +1,10 @@
+[
+    {
+        "task": "first added task..testing",
+        "status": "incomplete"
+    },
+    {
+        "task": "replacing the task i deleted",
+        "status": "complete"
+    }
+]
