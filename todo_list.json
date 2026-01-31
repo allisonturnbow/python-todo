@@ -8,7 +8,23 @@
         "status": "complete"
     },
     {
-        "task": "another task added",
+        "task": "and another one",
         "status": "incomplete"
+    },
+    {
+        "task": "adding another task",
+        "status": "in progress"
+    },
+    {
+        "task": "first task added",
+        "status": "incomplete"
+    },
+    {
+        "task": "sigh i am tired of this",
+        "status": "in progress"
+    },
+    {
+        "task": "trying one last time",
+        "status": "complete"
     }
 ]

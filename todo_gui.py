@@ -15,6 +15,9 @@ root = tk.Tk()
 root.title("To-Do List")
 root.geometry("900x600")
 
+my_frame = tk.Frame(root)
+my_frame.grid(row = 3, column = 0, columnspan = 3)
+
 try:
     with open("todo_list.json" , 'r') as file:
         tasks = json.load(file)
@@ -25,7 +28,8 @@ except FileNotFoundError:
 except json.JSONDecodeError:
     tasks = []
 
-'''def printtodo():
+'''
+def printtodo():
     #Display To-Do List
     #print(clear)
     print("\n\n\n\n-----------------------------------------------------------------------------------------------")
@@ -35,9 +39,22 @@ except json.JSONDecodeError:
     print("3. view tasks")
     print("0. exit")
     print("-----------------------------------------------------------------------------------------------")
-    #print(clear)'''
-    
-    
+    #print(clear)
+'''
+def view_list():
+    for index, task in enumerate(tasks):
+        temp_label = tk.Label(my_frame, text = f"{index + 1}. {task['task']} -------- {task['status']}").grid()    
+
+def clear_frame():
+    for widget in my_frame.winfo_children():
+        widget.destroy()
+
+def set_frame():
+    label1 = tk.Label(my_frame, text = "To do List items:", font = ("Arial", 14, "bold")).grid
+    view_list()
+
+
+
 def add_task():
     temptask = input("Task: ")
     tempstatus = input("Status: ")
@@ -48,6 +65,9 @@ def add_task():
     with open("todo_list.json", "w") as file:
         json.dump(tasks, file, indent = 4)
 
+    clear_frame()
+    view_list()
+
 def del_task():
     del_val = int(input(f"which task would you like to delete? 1 - {len(tasks)}: "))
 
@@ -56,19 +76,19 @@ def del_task():
     with open("todo_list.json", "w") as file:
         json.dump(tasks, file, indent = 4)
 
-def view_list():
-    for index, task in enumerate(tasks):
-        temp_label = tk.Label(root, text = f"{index + 1}. {task['task']} -------- {task['status']}").grid()
+    clear_frame()
+    view_list()
+
 
 
 
 #add button for adding a task to the list
 add_button = tk.Button(root, text = "add task", command=add_task).grid(row = 0, column = 0)
-del_button = tk.Button(root, text = "update", command = del_task).grid(row = 1, column = 0)
-label1 = tk.Label(root, text = "To do List items:", font = ("Arial", 14, "bold")).grid(row = 4, column = 0, columnspan = 3)
+del_button = tk.Button(root, text = "delete", command = del_task).grid(row = 1, column = 0)
 view_list()
 
 
+root.mainloop()
 
 
 
