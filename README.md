@@ -29,6 +29,9 @@ The goal of this project was to independently design and implement a small but c
 ├── todo_list.json   # Persistent task storage
 └── README.md
 
+## Project Status
+- CLI version: Complete
+- GUI version (Tkinter): In progress
 
 ## How to Run
 
@@ -38,6 +41,7 @@ python todo.py
 GUI Version
 python todo-gui.py
 
+Note: The GUI version is currently under development and may not be fully functional.
 
 ## Future Improvements
 
