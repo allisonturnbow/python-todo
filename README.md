@@ -31,7 +31,7 @@ The goal of this project was to independently design and implement a small but c
 
 ## Project Status
 - CLI version: Complete
-- GUI version (Tkinter): In progress
+- GUI version (Tkinter): Complete
 
 ## How to Run
 
@@ -49,3 +49,4 @@ Note: The GUI version is currently under development and may not be fully functi
 - Add task priorities and due dates
 - Refactor shared logic between CLI and GUI versions
 - Enhance GUI layout and usability
+- Update Task feature
