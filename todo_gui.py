@@ -1,237 +1,90 @@
 import tkinter as tk
+from tkinter import ttk
 import json
-import os
 
-#dictionary style below:
-#{task description, "complete": "True/False" }
-'''
-tasks = [
-    {'task': "first task", 'status': "complete"}
-    
-]
-'''
-root = tk.Tk()
-
-root.title("To-Do List")
-root.geometry("900x600")
-
-my_frame = tk.Frame(root)
-my_frame.grid(row = 3, column = 0, columnspan = 3)
-
+# --- Load tasks ---
 try:
-    with open("todo_list.json" , 'r') as file:
+    with open("todo_list.json", "r") as file:
         tasks = json.load(file)
-
-except FileNotFoundError:
+except (FileNotFoundError, json.JSONDecodeError):
     tasks = []
 
-except json.JSONDecodeError:
-    tasks = []
+# --- Functions ---
+def save_tasks():
+    with open("todo_list.json", "w") as file:
+        json.dump(tasks, file, indent=4)
 
-'''
-def printtodo():
-    #Display To-Do List
-    #print(clear)
-    print("\n\n\n\n-----------------------------------------------------------------------------------------------")
-    print("To-do List")
-    print("1. add item")
-    print("2. delete item")
-    print("3. view tasks")
-    print("0. exit")
-    print("-----------------------------------------------------------------------------------------------")
-    #print(clear)
-'''
-def view_list():
-    for index, task in enumerate(tasks):
-        temp_label = tk.Label(my_frame, text = f"{index + 1}. {task['task']} -------- {task['status']}").grid()    
-
-def clear_frame():
-    for widget in my_frame.winfo_children():
-        widget.destroy()
-
-def set_frame():
-    label1 = tk.Label(my_frame, text = "To do List items:", font = ("Arial", 14, "bold")).grid
-    view_list()
-
-
+def refresh_tree():
+    for item in tree.get_children():
+        tree.delete(item)
+    for i, task in enumerate(tasks):
+        tree.insert("", "end", values=(i + 1, task["task"], task["status"]))
 
 def add_task():
-    temptask = input("Task: ")
-    tempstatus = input("Status: ")
+    task = task_entry.get().strip()
+    status = status_entry.get().strip()
+    if task:
+        tasks.append({"task": task, "status": status})
+        save_tasks()
+        refresh_tree()
+        task_entry.delete(0, tk.END)
+        status_entry.delete(0, tk.END)
 
-    newtask = {"task": temptask, "status": tempstatus}
-    tasks.append(newtask)
+def delete_task():
+    selected = tree.selection()
+    if selected:
+        index = tree.index(selected[0])
+        tasks.pop(index)
+        save_tasks()
+        refresh_tree()
 
-    with open("todo_list.json", "w") as file:
-        json.dump(tasks, file, indent = 4)
+def delete_all():
+    tasks.clear()
+    save_tasks()
+    refresh_tree()
 
-    clear_frame()
-    view_list()
-
-def del_task():
-    del_val = int(input(f"which task would you like to delete? 1 - {len(tasks)}: "))
-
-    tasks.pop(del_val - 1)
-
-    with open("todo_list.json", "w") as file:
-        json.dump(tasks, file, indent = 4)
-
-    clear_frame()
-    view_list()
-
-
-
-
-#add button for adding a task to the list
-add_button = tk.Button(root, text = "add task", command=add_task).grid(row = 0, column = 0)
-del_button = tk.Button(root, text = "delete", command = del_task).grid(row = 1, column = 0)
-view_list()
-
-
-root.mainloop()
-
-
-
-
-'''
-
-def todo():
-    while True:
-        #file handling'
-        try:
-            with open("todo_list.json" , 'r') as file:
-                tasks = json.load(file)
-
-        except FileNotFoundError:
-            tasks = []
-
-        except json.JSONDecodeError:
-            tasks = []
-            
-        printtodo()
-
-        choice = input("\n\n\nEnter your choice (0-3)\n\n")
-
-
-        if choice == '0' :
-            print("Done with Todo List...") 
-            break
-
-        elif choice == '1' :
-            temptask = input("Task: ")
-            tempstatus = input("Status: ")
-
-            newtask = {"task": temptask, "status": tempstatus}
-            tasks.append(newtask)
-
-            with open("todo_list.json", "w") as file:
-                json.dump(tasks, file, indent = 4)
-            
-
-        elif choice == '2' :
-            del_val = int(input(f"which task would you like to delete? 1 - {len(tasks)}: "))
-
-            tasks.pop(del_val - 1)
-
-            with open("todo_list.json", "w") as file:
-                json.dump(tasks, file, indent = 4)
-            
-
-
-
-        elif choice == '3' :
-            print("viewing to-do list...\n") 
-            for index, task in enumerate(tasks):
-                print(f"{index + 1}. {task['task']} -------- {task['status']}")
-
-        else:
-            print("invalid input")
-
-    
-        
-
-
-todo()
-
-
-'''
-
-
-
-
-
-
-
-
-
-
-'''
+# --- GUI Setup ---
 root = tk.Tk()
-
 root.title("To-Do List")
-root.geometry("900x600")
+root.geometry("700x400")
 
+# Top frame for inputs
+input_frame = tk.Frame(root, pady=10)
+input_frame.pack(fill="x")
 
-#going to be a list of dictionaries
-#{task description, "complete": "True/False" }
-tasks = []
+tk.Label(input_frame, text="Task:").grid(row=0, column=0, padx=5)
+task_entry = tk.Entry(input_frame, width=30)
+task_entry.grid(row=0, column=1, padx=5)
 
-def add_task():
-    #temp_label = tk.Label(root, text = "task to add: ", font = ("Arial", 12)).grid(row = 1, column = 0)
-    message = add_entry_box.get()
-    add_entry_box.delete(0, tk.END)
-    #temp_label = tk.Label(root, text = f"{len(tasks) + 1}. {message}" )
-    tasks.append({"task": message, "complete": False})
+tk.Label(input_frame, text="Status:").grid(row=0, column=2, padx=5)
+status_entry = tk.Entry(input_frame, width=20)
+status_entry.grid(row=0, column=3, padx=5)
 
-    print_list(tasks)
+add_button = tk.Button(input_frame, text="Add Task", command=add_task)
+add_button.grid(row=0, column=4, padx=5)
 
+delete_button = tk.Button(input_frame, text="Delete Selected", command=delete_task)
+delete_button.grid(row=0, column=5, padx=5)
 
+delete_all_button = tk.Button(input_frame, text="Delete All", command=delete_all)
+delete_all_button.grid(row=0, column=6, padx=5)
 
-def update():
-    #temp_label = tk.Label(root, text = "task to update: ").grid(row = 1, column = 0, columnspan = 2)
-    message = update_entry_box.get()
-    update_entry_box.delete(0, tk.END)
+# Middle frame for task list
+tree_frame = tk.Frame(root)
+tree_frame.pack(fill="both", expand=True, padx=10, pady=10)
 
-    parts = message.split('. ')
+columns = ("#", "Task", "Status")
+tree = ttk.Treeview(tree_frame, columns=columns, show="headings", selectmode="browse")
+for col in columns:
+    tree.heading(col, text=col)
+    tree.column(col, anchor="center")
+tree.pack(fill="both", expand=True, side="left")
 
-    num = int(parts[0])
-    message = parts[1]
-    tasks[num - 1] = {"task": message, "complete": False}
+# Scrollbar
+scrollbar = ttk.Scrollbar(tree_frame, orient="vertical", command=tree.yview)
+tree.configure(yscroll=scrollbar.set)
+scrollbar.pack(fill="y", side="right")
 
-    print_list(tasks)
-    #temp_label = tk.Label(root, text = "retype item: ").grid(row = 1, column = 0, columnspan = 2)
-    #message = entry_box.get()
-    #entry_box.delete(0, tk.END)
-
-    #tasks[int(list_num)] = tk.Label(root, text = f"{len(tasks)}. {message}")
-
-    #print_list(tasks)
-
-
-#updated this so check!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-def print_list(temp_list):
-    for index, task in enumerate(tasks):
-        temp_label = tk.Label(root, text = f"{index + 1}. {task['task']} -------- {task['complete']}").grid()
-
-
-
-
-
-#add button for adding a task to the list
-add_button = tk.Button(root, text = "add task", command=add_task).grid(row = 0, column = 0)
-update_button = tk.Button(root, text = "update", command = update).grid(row = 1, column = 0)
-label1 = tk.Label(root, text = "To do List items:", font = ("Arial", 14, "bold")).grid(row = 4, column = 0, columnspan = 3)
-
-
-
-
-add_entry_box = tk.Entry(root, width=20)
-add_entry_box.grid(row = 0, column = 1, columnspan = 2)
-
-update_entry_box = tk.Entry(root, width=20)
-update_entry_box.grid(row = 1, column = 1, columnspan = 2)
-
-
+# --- Initialize ---
+refresh_tree()
 root.mainloop()
-
-'''

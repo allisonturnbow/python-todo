@@ -1,30 +1,22 @@
 [
     {
-        "task": "first task added",
+        "task": "starting over",
         "status": "in progress"
     },
     {
-        "task": "second task added",
+        "task": "a few more tasks to add",
         "status": "complete"
     },
     {
-        "task": "and another one",
+        "task": "perhaps it is annoying to retype everything",
+        "status": "complete"
+    },
+    {
+        "task": "okay last one",
         "status": "incomplete"
     },
     {
-        "task": "adding another task",
-        "status": "in progress"
-    },
-    {
-        "task": "first task added",
-        "status": "incomplete"
-    },
-    {
-        "task": "sigh i am tired of this",
-        "status": "in progress"
-    },
-    {
-        "task": "trying one last time",
+        "task": "maybe one more",
         "status": "complete"
     }
 ]
